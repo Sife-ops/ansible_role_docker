@@ -1,1 +1,10 @@
 ---
+galaxy_info:
+  author: Wyatt Goettsch
+  description: Installs Docker.
+  namespace: wgoettsch
+  role_name: ansible_role_docker
+  platforms:
+  - name: Debian
+    versions:
+    - bookworm
