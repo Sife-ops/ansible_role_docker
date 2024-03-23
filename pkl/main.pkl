@@ -1,6 +1,7 @@
 module main
 
 import "./tasks.pkl"
+import "./meta.pkl"
 
 shebang = "#!/usr/bin/env ansible-playbook\n"
 dashes = "---\n"
@@ -11,6 +12,10 @@ output {
 
         ["tasks/main.yml"] {
             text = "\(dashes)\(r.renderDocument(tasks.main))"
+        }
+
+        ["meta/main.yml"] {
+            text = "\(dashes)\(r.renderDocument(meta.main))"
         }
 
     }
