@@ -1,0 +1,51 @@
+module tasks
+
+import "@ansipkl/AnsibleBuiltin.pkl" as Ab
+import "@ansipkl/Playbook.pkl" as P
+
+main = P.NewRole(new Listing {
+
+    new Ab.Apt {
+        name = "install ca-certs"
+        options {
+            state = "present"
+            name {
+                "ca-certificates"
+            }
+        }
+    }.Task()
+
+    new Ab.GetUrl {
+        name = "download keyring"
+        options {
+            url = "https://download.docker.com/linux/debian/gpg"
+            dest = "/etc/apt/keyrings/docker.asc"
+        }
+    }.Task()
+
+    new Ab.AptRepository {
+        name = "configure repository"
+        options {
+            repo = "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+            state = "present"
+        }
+        register = "repo"
+    }.Task()
+
+    new Ab.Apt {
+        name = "install docker"
+        options {
+            state = "present"
+            name {
+                "docker-ce"
+                "docker-ce-cli"
+                "containerd.io"
+                "docker-buildx-plugin"
+                "docker-compose-plugin"
+            }
+        }
+        `when` = "repo.changed"
+    }.Task()
+
+})
+
